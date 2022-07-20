@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  pg:
+    image: postgres:14.4-alpine
+    container_name: finz-pg
+    environment:
+      POSTGRES_PASSWORD: d8d5595440bda4a7d913d6d09b6e133b
+      POSTGRES_USER: devpg
+      POSTGRES_DB: finz
+    volumes:
+      - pgdata:/data
+
+  api:
+    build:
+      context: .
+    container_name: finz-api
+    ports:
+      - 2202:2202
+    environment:
+      APP_ENV: development
+      NODE_ENV: development
+      DATABASE_URL: postgresql://devpg:d8d5595440bda4a7d913d6d09b6e133b@pg:5432/finz?schema=public
+
+volumes:
+  pgdata:

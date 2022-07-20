@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "jsc": {
+    "target": "es2021",
+    "baseUrl": ".",
+    "parser": {
+      "syntax": "typescript"
+    },
+    "paths": {
+      "@app": ["src"],
+      "@app/*": ["src/*"]
+    }
+  },
+  "module": {
+    "noInterop": true,
+    "type": "es6"
+  },
+  "env": {
+    "targets": {
+      "node": "16"
+    }
+  }
+}

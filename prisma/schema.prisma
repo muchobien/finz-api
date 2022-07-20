@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "zod-prisma"
+  output   = "../src/zod"
+
+  relationModel = true
+
+  modelCase    = "PascalCase"
+  modelSuffix  = "Model"
+  useDecimalJs = true
+  prismaJsonNullability = true
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  accounts Account[]
+}
+
+model Account {
+  id        String   @id @default(cuid())
+  name      String
+  color     String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  userId String
+  owner  User   @relation(fields: [userId], references: [id])
+
+  trransactions Transaction[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  transactions Transaction[]
+}
+
+enum TransactionKind {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+model Transaction {
+  id        String          @id @default(cuid())
+  name      String
+  amount    Decimal         @db.Decimal(18, 8)
+  kind      TransactionKind
+  date      DateTime        @db.Date
+  createdAt DateTime        @default(now()) @db.Timestamptz
+  updatedAt DateTime        @updatedAt @db.Timestamptz
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id])
+}
