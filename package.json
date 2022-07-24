@@ -36,7 +36,7 @@
     "mercurius": "10.1.0",
     "mercurius-auth": "3.0.0",
     "mercurius-codegen": "4.0.0",
-    "zod": "3.17.9"
+    "zod": "3.17.10"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
