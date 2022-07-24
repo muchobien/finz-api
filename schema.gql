@@ -1,0 +1,147 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+directive @auth(requires: Role = ADMIN) on OBJECT | FIELD_DEFINITION
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar BigInt
+
+"""
+Represents NULL values
+"""
+scalar Void
+
+enum Role {
+  ADMIN
+  USER
+  UNKNOWN
+}
+
+type Account {
+  id: ID!
+  name: String!
+  color: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  transactions: [Transaction!]!
+}
+
+type Query {
+  account(id: ID!): Account! @auth(requires: USER)
+  accounts: [Account!]! @auth(requires: USER)
+  category(id: ID!): Category! @auth(requires: USER)
+  categories: [Category!]! @auth(requires: USER)
+  transaction(id: ID!): Transaction! @auth(requires: USER)
+  transactions: [Transaction!]! @auth(requires: USER)
+  user(id: ID!): User!
+  users: [User!]!
+}
+
+input AccountInput {
+  name: String!
+  color: String!
+}
+
+type Mutation {
+  createAccount(input: AccountInput!): Account! @auth(requires: USER)
+  updateAccount(id: ID!, input: AccountInput!): Account! @auth(requires: USER)
+  deleteAccount(id: ID!): Void @auth(requires: USER)
+  createCategory(input: CategoryInput!): Category! @auth(requires: USER)
+  updateCategory(id: ID!, input: CategoryInput!): Category! @auth
+  deleteCategory(id: ID!): Void @auth
+  createTransaction(input: TransactionInput!): Transaction! @auth(requires: USER)
+  updateTransaction(id: ID!, input: TransactionInput!): Transaction! @auth(requires: USER)
+  deleteTransaction(id: ID!): Void @auth(requires: USER)
+  updateUser(id: ID!, input: UserInput!): User! @auth(requires: USER)
+  deleteUser(id: ID!): Void @auth(requires: USER)
+  register(input: AuthInput!): Authenticated!
+  login(input: AuthInput!): Authenticated!
+  refreshToken: Credential!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  color: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CategoryInput {
+  name: String!
+  color: String
+}
+
+enum TransactionKind {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+type Transaction {
+  id: ID!
+  name: String!
+  amount: BigInt!
+  date: Date!
+  kind: TransactionKind!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: Category!
+}
+
+input TransactionInput {
+  name: String!
+  amount: BigInt!
+  date: Date!
+  kind: TransactionKind!
+  categoryId: ID!
+}
+
+type User {
+  id: ID!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  accounts: [Account!]!
+}
+
+type Credential {
+  accessToken: String!
+  refreshToken: String!
+  tokenKind: String!
+}
+
+type Authenticated {
+  user: User!
+  credential: Credential!
+}
+
+input UserInput {
+  email: String!
+}
+
+input AuthInput {
+  provider: Provider!
+  email: String!
+  token: String!
+}
+
+enum Provider {
+  APPLE
+  GOOGLE
+  LOCAL
+}

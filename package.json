@@ -22,10 +22,20 @@
   },
   "dependencies": {
     "@fastify/autoload": "5.1.0",
-    "@fastify/swagger": "7.4.1",
+    "@fastify/jwt": "6.3.1",
+    "@graphql-tools/load-files": "6.6.0",
+    "@graphql-tools/merge": "8.3.0",
+    "@graphql-tools/schema": "8.5.0",
     "@prisma/client": "4.1.0",
+    "altair-fastify-plugin": "4.5.3",
     "decimal.js": "10.3.1",
-    "fastify": "4.2.1",
+    "fastify": "4.3.0",
+    "fastify-plugin": "4.0.0",
+    "graphql": "16.5.0",
+    "graphql-scalars": "1.17.0",
+    "mercurius": "10.1.0",
+    "mercurius-auth": "3.0.0",
+    "mercurius-codegen": "4.0.0",
     "zod": "3.17.9"
   },
   "devDependencies": {

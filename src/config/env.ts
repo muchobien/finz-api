@@ -1,17 +1,13 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  app: z.enum(['development', 'production', 'test', 'gh-actions']),
-  host: z.string().default('0.0.0.0'),
-  node: z.enum(['production', 'development']),
-  port: z.number().int().nonnegative().lte(65535).default(2202),
-  postgresUrl: z.string().min(1),
+  APP_ENV: z.enum(['development', 'production', 'test', 'gh-actions']),
+  HOST: z.string().default('0.0.0.0'),
+  NODE_ENV: z.enum(['production', 'development']),
+  PORT: z.number().int().nonnegative().lte(65535).default(2202),
+  DATABASE_URL: z.string().min(1),
+  JWT_ACCESS_SECRET: z.string().min(1),
+  JWT_REFRESH_SECRET: z.string().min(1),
 });
 
-export const env = envSchema.parse({
-  app: process.env['APP_ENV'],
-  host: process.env['HOST'],
-  node: process.env['NODE_ENV'],
-  port: process.env['PORT'],
-  postgresUrl: process.env['DATABASE_URL'],
-});
+export const env = envSchema.parse(process.env);

@@ -1,0 +1,25 @@
+type Account {
+  id: ID!
+  name: String!
+  color: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  transactions: [Transaction!]!
+}
+
+type Query {
+  account(id: ID!): Account! @auth(requires: USER)
+  accounts: [Account!]! @auth(requires: USER)
+}
+
+input AccountInput {
+  name: String!
+  color: String!
+}
+
+type Mutation {
+  createAccount(input: AccountInput!): Account! @auth(requires: USER)
+  updateAccount(id: ID!, input: AccountInput!): Account! @auth(requires: USER)
+  deleteAccount(id: ID!): Void @auth(requires: USER)
+}

@@ -5,36 +5,48 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator zod {
-  provider = "zod-prisma"
-  output   = "../src/zod"
-
-  relationModel = true
-
-  modelCase    = "PascalCase"
-  modelSuffix  = "Model"
-  useDecimalJs = true
-  prismaJsonNullability = true
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+enum Provider {
+  APPLE
+  GOOGLE
+  LOCAL
+}
+
+model Identity {
+  id        String   @id @default(cuid())
+  token     String
+  provider  Provider
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
+  role      Role     @default(USER)
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
-  accounts Account[]
+  accounts   Account[]
+  identities Identity[]
 }
 
 model Account {
   id        String   @id @default(cuid())
   name      String
-  color     String
+  color     String?
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
@@ -47,7 +59,7 @@ model Account {
 model Category {
   id        String   @id @default(cuid())
   name      String   @unique
-  color     String
+  color     String?
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
