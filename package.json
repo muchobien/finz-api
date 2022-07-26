@@ -35,7 +35,7 @@
     "graphql-scalars": "1.17.0",
     "mercurius": "10.1.0",
     "mercurius-auth": "3.0.0",
-    "mercurius-codegen": "4.0.0",
+    "mercurius-codegen": "4.0.1",
     "zod": "3.17.10"
   },
   "devDependencies": {
