@@ -16,14 +16,19 @@ A date string, such as 2007-12-03, compliant with the `full-date` format outline
 scalar Date
 
 """
-The `BigInt` scalar type represents non-fractional signed whole numeric values.
-"""
-scalar BigInt
-
-"""
 Represents NULL values
 """
 scalar Void
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""
+An arbitrary-precision Decimal type
+"""
+scalar Decimal
 
 enum Role {
   ADMIN
@@ -35,6 +40,7 @@ type Account {
   id: ID!
   name: String!
   color: String
+  balance: Decimal!
   createdAt: DateTime!
   updatedAt: DateTime!
   transactions: [Transaction!]!
@@ -95,7 +101,7 @@ enum TransactionKind {
 type Transaction {
   id: ID!
   name: String!
-  amount: BigInt!
+  amount: Decimal!
   date: Date!
   kind: TransactionKind!
   createdAt: DateTime!
@@ -105,10 +111,11 @@ type Transaction {
 
 input TransactionInput {
   name: String!
-  amount: BigInt!
+  amount: Decimal!
   date: Date!
   kind: TransactionKind!
   categoryId: ID!
+  accountId: ID!
 }
 
 type User {
@@ -116,6 +123,7 @@ type User {
   email: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  settings: JSON!
   accounts: [Account!]!
 }
 

@@ -36,9 +36,16 @@ const resolvers: IResolvers = {
         input.token = await Hash.password(input.token);
       }
 
+      const settings = await prisma.remoteConfig.findUniqueOrThrow({
+        where: {
+          name: 'settings',
+        },
+      });
+
       const user = await prisma.user.create({
         data: {
           email: input.email,
+          settings,
           identities: {
             create: {
               provider: input.provider,

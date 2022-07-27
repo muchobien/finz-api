@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 import type { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import type { MercuriusContext } from 'mercurius';
 export type Maybe<T> = T | null;
@@ -23,10 +24,12 @@ export type Scalars = {
   DateTime: Date;
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: Date;
-  /** The `BigInt` scalar type represents non-fractional signed whole numeric values. */
-  BigInt: any;
   /** Represents NULL values */
   Void: void;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: Prisma.JsonValue;
+  /** An arbitrary-precision Decimal type */
+  Decimal: Prisma.Decimal;
   _FieldSet: any;
 };
 
@@ -37,6 +40,7 @@ export type Account = {
   id: Scalars['ID'];
   name: Scalars['String'];
   color?: Maybe<Scalars['String']>;
+  balance: Scalars['Decimal'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   transactions: Array<Transaction>;
@@ -169,7 +173,7 @@ export type Transaction = {
   __typename?: 'Transaction';
   id: Scalars['ID'];
   name: Scalars['String'];
-  amount: Scalars['BigInt'];
+  amount: Scalars['Decimal'];
   date: Scalars['Date'];
   kind: TransactionKind;
   createdAt: Scalars['DateTime'];
@@ -179,10 +183,11 @@ export type Transaction = {
 
 export type TransactionInput = {
   name: Scalars['String'];
-  amount: Scalars['BigInt'];
+  amount: Scalars['Decimal'];
   date: Scalars['Date'];
   kind: TransactionKind;
   categoryId: Scalars['ID'];
+  accountId: Scalars['ID'];
 };
 
 export type User = {
@@ -191,6 +196,7 @@ export type User = {
   email: Scalars['String'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
+  settings: Scalars['JSON'];
   accounts: Array<Account>;
 };
 
@@ -286,8 +292,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   Void: ResolverTypeWrapper<Scalars['Void']>;
+  JSON: ResolverTypeWrapper<Scalars['JSON']>;
+  Decimal: ResolverTypeWrapper<Scalars['Decimal']>;
   Role: Role;
   Account: ResolverTypeWrapper<Account>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -313,8 +320,9 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   Date: Scalars['Date'];
-  BigInt: Scalars['BigInt'];
   Void: Scalars['Void'];
+  JSON: Scalars['JSON'];
+  Decimal: Scalars['Decimal'];
   Account: Account;
   ID: Scalars['ID'];
   String: Scalars['String'];
@@ -352,12 +360,16 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
-export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
-  name: 'BigInt';
-}
-
 export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
   name: 'Void';
+}
+
+export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
+
+export interface DecimalScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Decimal'], any> {
+  name: 'Decimal';
 }
 
 export type AccountResolvers<
@@ -367,6 +379,7 @@ export type AccountResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   color?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  balance?: Resolver<ResolversTypes['Decimal'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType>;
@@ -490,7 +503,7 @@ export type TransactionResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  amount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['Decimal'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes['TransactionKind'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -507,6 +520,7 @@ export type UserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  settings?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
   accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -533,8 +547,9 @@ export type AuthenticatedResolvers<
 export type Resolvers<ContextType = MercuriusContext> = {
   DateTime?: GraphQLScalarType;
   Date?: GraphQLScalarType;
-  BigInt?: GraphQLScalarType;
   Void?: GraphQLScalarType;
+  JSON?: GraphQLScalarType;
+  Decimal?: GraphQLScalarType;
   Account?: AccountResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -571,6 +586,7 @@ export interface Loaders<TContext = import('mercurius').MercuriusContext & { rep
     id?: LoaderResolver<Scalars['ID'], Account, {}, TContext>;
     name?: LoaderResolver<Scalars['String'], Account, {}, TContext>;
     color?: LoaderResolver<Maybe<Scalars['String']>, Account, {}, TContext>;
+    balance?: LoaderResolver<Scalars['Decimal'], Account, {}, TContext>;
     createdAt?: LoaderResolver<Scalars['DateTime'], Account, {}, TContext>;
     updatedAt?: LoaderResolver<Scalars['DateTime'], Account, {}, TContext>;
     transactions?: LoaderResolver<Array<Transaction>, Account, {}, TContext>;
@@ -587,7 +603,7 @@ export interface Loaders<TContext = import('mercurius').MercuriusContext & { rep
   Transaction?: {
     id?: LoaderResolver<Scalars['ID'], Transaction, {}, TContext>;
     name?: LoaderResolver<Scalars['String'], Transaction, {}, TContext>;
-    amount?: LoaderResolver<Scalars['BigInt'], Transaction, {}, TContext>;
+    amount?: LoaderResolver<Scalars['Decimal'], Transaction, {}, TContext>;
     date?: LoaderResolver<Scalars['Date'], Transaction, {}, TContext>;
     kind?: LoaderResolver<TransactionKind, Transaction, {}, TContext>;
     createdAt?: LoaderResolver<Scalars['DateTime'], Transaction, {}, TContext>;
@@ -600,6 +616,7 @@ export interface Loaders<TContext = import('mercurius').MercuriusContext & { rep
     email?: LoaderResolver<Scalars['String'], User, {}, TContext>;
     createdAt?: LoaderResolver<Scalars['DateTime'], User, {}, TContext>;
     updatedAt?: LoaderResolver<Scalars['DateTime'], User, {}, TContext>;
+    settings?: LoaderResolver<Scalars['JSON'], User, {}, TContext>;
     accounts?: LoaderResolver<Array<Account>, User, {}, TContext>;
   };
 

@@ -11,16 +11,18 @@ import {
   DateTimeResolver,
   DateResolver,
   DateTypeDefinition,
-  BigIntTypeDefinition,
-  BigIntResolver,
   VoidTypeDefinition,
   VoidResolver,
+  JSONDefinition,
+  JSONResolver,
 } from 'graphql-scalars';
 import fp from 'fastify-plugin';
+import { DecimalDefinition, DecimalResolver } from '@app/graphql/scalars';
 
 const buildContext = async (req: FastifyRequest, _reply: FastifyReply) => {
   return {
     prisma: req.prisma,
+    currentUser: () => req.user,
   };
 };
 
@@ -84,12 +86,21 @@ const plugin: FastifyPluginCallback = async app => {
 
   app.register(mercurius, {
     schema: makeExecutableSchema({
-      typeDefs: [DateTimeTypeDefinition, DateTypeDefinition, BigIntTypeDefinition, VoidTypeDefinition, typeDefs],
+      typeDefs: [
+        DateTimeTypeDefinition,
+        DateTypeDefinition,
+
+        VoidTypeDefinition,
+        JSONDefinition,
+        DecimalDefinition,
+        typeDefs,
+      ],
       resolvers: {
         DateTime: DateTimeResolver,
         Date: DateResolver,
-        BigInt: BigIntResolver,
         Void: VoidResolver,
+        JSON: JSONResolver,
+        Decimal: DecimalResolver,
         ...resolvers,
       },
     }),
@@ -103,11 +114,14 @@ const plugin: FastifyPluginCallback = async app => {
     },
     outputSchema: true,
     targetPath: './src/generated/graphql.ts',
+    preImportCode: `import type { Prisma } from '@prisma/client';`,
     codegenConfig: {
       scalars: {
         DateTime: 'Date',
         Date: 'Date',
         Void: 'void',
+        JSON: 'Prisma.JsonValue',
+        Decimal: 'Prisma.Decimal',
       },
       enumsAsTypes: true,
     },

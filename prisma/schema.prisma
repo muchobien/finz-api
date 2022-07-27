@@ -36,6 +36,7 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   role      Role     @default(USER)
+  settings  Json     @default("{}") @db.JsonB
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @updatedAt @db.Timestamptz
 
@@ -86,4 +87,9 @@ model Transaction {
 
   accountId String
   account   Account @relation(fields: [accountId], references: [id])
+}
+
+model RemoteConfig {
+  name  String @id
+  value Json   @db.JsonB
 }
