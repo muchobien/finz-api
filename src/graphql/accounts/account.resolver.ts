@@ -15,32 +15,32 @@ const resolvers: IResolvers = {
     },
   },
   Mutation: {
-    createAccount: async (_, { input }, { prisma, currentUser }) => {
-      const user = currentUser();
+    createAccount: async (_, { input }, { prisma, session }) => {
+      const userId = session.getUserId();
       return prisma.account.create({
-        data: { ...input, userId: user.id },
+        data: { ...input, userId },
       });
     },
-    updateAccount: async (_, { id, input }, { prisma, currentUser }) => {
-      const user = currentUser();
+    updateAccount: async (_, { id, input }, { prisma, session }) => {
+      const userId = session.getUserId();
       await prisma.account.updateMany({
-        where: { id, userId: user.id },
+        where: { id, userId },
         data: input,
       });
 
       return prisma.account.findFirstOrThrow({
-        where: { id, userId: user.id },
+        where: { id, userId },
       });
     },
-    deleteAccount: async (_, { id }, { prisma, currentUser }) => {
-      const user = currentUser();
+    deleteAccount: async (_, { id }, { prisma, session }) => {
+      const userId = session.getUserId();
       await prisma.account.deleteMany({
-        where: { id, userId: user.id },
+        where: { id, userId },
       });
     },
   },
   Account: {
-    balance: async (account) => {
+    balance: async account => {
       return account.transactions.reduce((acc, transaction) => {
         return acc.add(transaction.amount);
       }, new Prisma.Decimal(0));

@@ -8,7 +8,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = Fastify({
-  logger: true,
+  logger:
+    env.APP_ENV === 'development'
+      ? {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: 'HH:MM:ss Z',
+              ignore: 'pid,hostname',
+            },
+          },
+        }
+      : true,
 });
 
 app.register(autoLoad, {

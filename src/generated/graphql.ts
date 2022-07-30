@@ -54,8 +54,6 @@ export type Query = {
   categories: Array<Category>;
   transaction: Transaction;
   transactions: Array<Transaction>;
-  user: User;
-  users: Array<User>;
 };
 
 export type QueryaccountArgs = {
@@ -67,10 +65,6 @@ export type QuerycategoryArgs = {
 };
 
 export type QuerytransactionArgs = {
-  id: Scalars['ID'];
-};
-
-export type QueryuserArgs = {
   id: Scalars['ID'];
 };
 
@@ -90,11 +84,6 @@ export type Mutation = {
   createTransaction: Transaction;
   updateTransaction: Transaction;
   deleteTransaction?: Maybe<Scalars['Void']>;
-  updateUser: User;
-  deleteUser?: Maybe<Scalars['Void']>;
-  register: Authenticated;
-  login: Authenticated;
-  refreshToken: Credential;
 };
 
 export type MutationcreateAccountArgs = {
@@ -136,23 +125,6 @@ export type MutationdeleteTransactionArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationupdateUserArgs = {
-  id: Scalars['ID'];
-  input: UserInput;
-};
-
-export type MutationdeleteUserArgs = {
-  id: Scalars['ID'];
-};
-
-export type MutationregisterArgs = {
-  input: AuthInput;
-};
-
-export type MutationloginArgs = {
-  input: AuthInput;
-};
-
 export type Category = {
   __typename?: 'Category';
   id: Scalars['ID'];
@@ -189,41 +161,6 @@ export type TransactionInput = {
   categoryId: Scalars['ID'];
   accountId: Scalars['ID'];
 };
-
-export type User = {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  email: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-  settings: Scalars['JSON'];
-  accounts: Array<Account>;
-};
-
-export type Credential = {
-  __typename?: 'Credential';
-  accessToken: Scalars['String'];
-  refreshToken: Scalars['String'];
-  tokenKind: Scalars['String'];
-};
-
-export type Authenticated = {
-  __typename?: 'Authenticated';
-  user: User;
-  credential: Credential;
-};
-
-export type UserInput = {
-  email: Scalars['String'];
-};
-
-export type AuthInput = {
-  provider: Provider;
-  email: Scalars['String'];
-  token: Scalars['String'];
-};
-
-export type Provider = 'APPLE' | 'GOOGLE' | 'LOCAL';
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -307,12 +244,6 @@ export type ResolversTypes = {
   TransactionKind: TransactionKind;
   Transaction: ResolverTypeWrapper<Transaction>;
   TransactionInput: TransactionInput;
-  User: ResolverTypeWrapper<User>;
-  Credential: ResolverTypeWrapper<Credential>;
-  Authenticated: ResolverTypeWrapper<Authenticated>;
-  UserInput: UserInput;
-  AuthInput: AuthInput;
-  Provider: Provider;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -333,11 +264,6 @@ export type ResolversParentTypes = {
   CategoryInput: CategoryInput;
   Transaction: Transaction;
   TransactionInput: TransactionInput;
-  User: User;
-  Credential: Credential;
-  Authenticated: Authenticated;
-  UserInput: UserInput;
-  AuthInput: AuthInput;
   Boolean: Scalars['Boolean'];
 };
 
@@ -401,8 +327,6 @@ export type QueryResolvers<
     RequireFields<QuerytransactionArgs, 'id'>
   >;
   transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryuserArgs, 'id'>>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
 export type MutationResolvers<
@@ -463,26 +387,6 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationdeleteTransactionArgs, 'id'>
   >;
-  updateUser?: Resolver<
-    ResolversTypes['User'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationupdateUserArgs, 'id' | 'input'>
-  >;
-  deleteUser?: Resolver<
-    Maybe<ResolversTypes['Void']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationdeleteUserArgs, 'id'>
-  >;
-  register?: Resolver<
-    ResolversTypes['Authenticated'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationregisterArgs, 'input'>
-  >;
-  login?: Resolver<ResolversTypes['Authenticated'], ParentType, ContextType, RequireFields<MutationloginArgs, 'input'>>;
-  refreshToken?: Resolver<ResolversTypes['Credential'], ParentType, ContextType>;
 };
 
 export type CategoryResolvers<
@@ -512,38 +416,6 @@ export type TransactionResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
-> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  settings?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
-  accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CredentialResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends ResolversParentTypes['Credential'] = ResolversParentTypes['Credential'],
-> = {
-  accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tokenKind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthenticatedResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends ResolversParentTypes['Authenticated'] = ResolversParentTypes['Authenticated'],
-> = {
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  credential?: Resolver<ResolversTypes['Credential'], ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = MercuriusContext> = {
   DateTime?: GraphQLScalarType;
   Date?: GraphQLScalarType;
@@ -555,9 +427,6 @@ export type Resolvers<ContextType = MercuriusContext> = {
   Mutation?: MutationResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   Transaction?: TransactionResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
-  Credential?: CredentialResolvers<ContextType>;
-  Authenticated?: AuthenticatedResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = MercuriusContext> = {
@@ -609,26 +478,6 @@ export interface Loaders<TContext = import('mercurius').MercuriusContext & { rep
     createdAt?: LoaderResolver<Scalars['DateTime'], Transaction, {}, TContext>;
     updatedAt?: LoaderResolver<Scalars['DateTime'], Transaction, {}, TContext>;
     category?: LoaderResolver<Category, Transaction, {}, TContext>;
-  };
-
-  User?: {
-    id?: LoaderResolver<Scalars['ID'], User, {}, TContext>;
-    email?: LoaderResolver<Scalars['String'], User, {}, TContext>;
-    createdAt?: LoaderResolver<Scalars['DateTime'], User, {}, TContext>;
-    updatedAt?: LoaderResolver<Scalars['DateTime'], User, {}, TContext>;
-    settings?: LoaderResolver<Scalars['JSON'], User, {}, TContext>;
-    accounts?: LoaderResolver<Array<Account>, User, {}, TContext>;
-  };
-
-  Credential?: {
-    accessToken?: LoaderResolver<Scalars['String'], Credential, {}, TContext>;
-    refreshToken?: LoaderResolver<Scalars['String'], Credential, {}, TContext>;
-    tokenKind?: LoaderResolver<Scalars['String'], Credential, {}, TContext>;
-  };
-
-  Authenticated?: {
-    user?: LoaderResolver<User, Authenticated, {}, TContext>;
-    credential?: LoaderResolver<Credential, Authenticated, {}, TContext>;
   };
 }
 declare module 'mercurius' {
