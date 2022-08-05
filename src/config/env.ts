@@ -10,8 +10,8 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().min(1),
   GITHUB_SHA: z.string().min(1).default('unknown'),
   VERSION: z.string().min(1).default('0.0.0-unknown'),
-  API_DOMAIN: z.string().min(1).default('http://localhost:2202'),
-  WEB_DOMAIN: z.string().min(1).default('http://localhost:3000'),
+  API_DOMAIN: z.string().min(1).default('http://127.0.0.1:2202'),
+  WEB_DOMAIN: z.string().min(1).default('http://127.0.0.1:3000'),
   SUPERTOKENS_CONNECTION_URI: z.string().min(1),
 });
 
