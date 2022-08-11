@@ -21,7 +21,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@fastify/autoload": "5.1.0",
+    "@fastify/autoload": "5.2.0",
     "@fastify/cors": "8.1.0",
     "@fastify/formbody": "7.0.1",
     "@graphql-tools/load-files": "6.6.0",
@@ -31,14 +31,14 @@
     "altair-fastify-plugin": "4.5.3",
     "decimal.js": "10.3.1",
     "fastify": "4.3.0",
-    "fastify-plugin": "4.0.0",
+    "fastify-plugin": "4.1.0",
     "graphql": "16.5.0",
     "graphql-scalars": "1.17.0",
     "mercurius": "10.1.0",
     "mercurius-auth": "3.0.0",
     "mercurius-codegen": "4.0.1",
     "supertokens-node": "11.0.3",
-    "zod": "3.17.10"
+    "zod": "3.18.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
