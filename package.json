@@ -38,7 +38,7 @@
     "mercurius-auth": "3.0.0",
     "mercurius-codegen": "4.0.1",
     "supertokens-node": "11.0.3",
-    "zod": "3.17.10"
+    "zod": "3.18.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
