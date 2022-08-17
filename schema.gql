@@ -53,6 +53,8 @@ type Query {
   categories: [Category!]! @auth(requires: USER)
   transaction(id: ID!): Transaction! @auth(requires: USER)
   transactions: [Transaction!]! @auth(requires: USER)
+  user(id: ID!): User!
+  users: [User!]!
 }
 
 input AccountInput {
@@ -70,6 +72,11 @@ type Mutation {
   createTransaction(input: TransactionInput!): Transaction! @auth(requires: USER)
   updateTransaction(id: ID!, input: TransactionInput!): Transaction! @auth(requires: USER)
   deleteTransaction(id: ID!): Void @auth(requires: USER)
+  updateUser(id: ID!, input: UserInput!): User! @auth(requires: USER)
+  deleteUser(id: ID!): Void @auth(requires: USER)
+  register(input: AuthInput!): Authenticated!
+  login(input: AuthInput!): Authenticated!
+  refreshToken: Credential!
 }
 
 type Category {
@@ -109,4 +116,40 @@ input TransactionInput {
   kind: TransactionKind!
   categoryId: ID!
   accountId: ID!
+}
+
+type User {
+  id: ID!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  settings: JSON!
+  accounts: [Account!]!
+}
+
+type Credential {
+  accessToken: String!
+  refreshToken: String!
+  tokenKind: String!
+}
+
+type Authenticated {
+  user: User!
+  credential: Credential!
+}
+
+input UserInput {
+  email: String!
+}
+
+input AuthInput {
+  provider: Provider!
+  email: String!
+  token: String!
+}
+
+enum Provider {
+  APPLE
+  GOOGLE
+  LOCAL
 }

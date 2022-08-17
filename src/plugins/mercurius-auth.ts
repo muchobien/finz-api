@@ -2,30 +2,19 @@ import type { Role } from '@app/generated/graphql';
 import type { FastifyPluginCallback } from 'fastify';
 import fp from 'fastify-plugin';
 import mercuriusAuth from 'mercurius-auth';
-import UserRoles from 'supertokens-node/recipe/userroles';
 
 const plugin: FastifyPluginCallback = async app => {
   app.register(mercuriusAuth, {
     authDirective: 'auth',
-    authContext({ session }) {
-      return { session };
+    authContext() {
+      return {};
     },
     async applyPolicy(policy, _parent, _args, context, _info) {
       const role: Role = policy.arguments[0].value.value;
 
-      if (role === 'UNKNOWN') {
-        return true;
-      }
+      const payload = await context.reply.request.accessJwtVerify();
 
-      const userId = context.session?.getUserId();
-
-      if (!userId) {
-        return false;
-      }
-
-      const { roles } = await UserRoles.getRolesForUser(userId);
-
-      return roles.includes(role);
+      return role === payload.role;
     },
   });
 };

@@ -22,7 +22,7 @@ import { DecimalDefinition, DecimalResolver } from '@app/graphql/scalars';
 const buildContext = async (req: FastifyRequest, _reply: FastifyReply) => {
   return {
     prisma: req.prisma,
-    session: req.session!,
+    currentUser: () => req.user,
   };
 };
 
@@ -33,6 +33,21 @@ declare module 'mercurius' {
 }
 
 export const loaders: MercuriusLoaders = {
+  User: {
+    async accounts(queries, { prisma }) {
+      const ids = queries.map(({ obj }) => obj.id);
+
+      const accounts = await prisma.account.findMany({
+        where: {
+          userId: {
+            in: ids,
+          },
+        },
+      });
+
+      return ids.map(id => accounts.filter(account => account.userId === id));
+    },
+  },
   Account: {
     async transactions(queries, { prisma }) {
       const ids = queries.map(({ obj }) => obj.id);
@@ -115,5 +130,5 @@ const plugin: FastifyPluginCallback = async app => {
 
 export default fp(plugin, {
   name: 'mercurius',
-  dependencies: ['prisma', 'supertokens'],
+  dependencies: ['prisma', 'jwt'],
 });

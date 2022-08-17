@@ -15,27 +15,27 @@ const resolvers: IResolvers = {
     },
   },
   Mutation: {
-    createAccount: async (_, { input }, { prisma, session }) => {
-      const userId = session.getUserId();
+    createAccount: async (_, { input }, { prisma, currentUser }) => {
+      const user = currentUser();
       return prisma.account.create({
-        data: { ...input, userId },
+        data: { ...input, userId: user.id },
       });
     },
-    updateAccount: async (_, { id, input }, { prisma, session }) => {
-      const userId = session.getUserId();
+    updateAccount: async (_, { id, input }, { prisma, currentUser }) => {
+      const user = currentUser();
       await prisma.account.updateMany({
-        where: { id, userId },
+        where: { id, userId: user.id },
         data: input,
       });
 
       return prisma.account.findFirstOrThrow({
-        where: { id, userId },
+        where: { id, userId: user.id },
       });
     },
-    deleteAccount: async (_, { id }, { prisma, session }) => {
-      const userId = session.getUserId();
+    deleteAccount: async (_, { id }, { prisma, currentUser }) => {
+      const user = currentUser();
       await prisma.account.deleteMany({
-        where: { id, userId },
+        where: { id, userId: user.id },
       });
     },
   },
