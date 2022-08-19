@@ -3010,10 +3010,10 @@ mercurius-codegen@4.0.1:
     chokidar "^3.5.3"
     mkdirp "^1.0.4"
 
-mercurius@10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/mercurius/-/mercurius-10.1.0.tgz#c05b839335dea0c0eb99f5270a83bebecc1d3129"
-  integrity sha512-7CBxRcxRELyGDz2FernU2dogyJ2b7Vp4JBUx68Pn082xNH97Oel/Mt4yPpn7V2V1bY7MyuxSF+oZLzFlG+5jCw==
+mercurius@10.1.1:
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/mercurius/-/mercurius-10.1.1.tgz#f0b0c4103fe0a4cd3036e5b65a3dc3f033be95b6"
+  integrity sha512-QOnyWcgE3TswlDEKEr1azWK8gqUNOtabgGXwmsH7Cu+BFN1nMN0fEt4O/r2THHxsJ45NLMICAkR6UEWT7LNTqQ==
   dependencies:
     "@fastify/error" "^3.0.0"
     "@fastify/static" "^6.0.0"
