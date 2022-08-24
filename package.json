@@ -42,7 +42,7 @@
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.241",
     "@tsconfig/node16-strictest": "1.0.3",
-    "@types/node": "18.7.9",
+    "@types/node": "18.7.12",
     "@typescript-eslint/eslint-plugin": "5.34.0",
     "@typescript-eslint/parser": "5.33.1",
     "eslint": "8.22.0",
