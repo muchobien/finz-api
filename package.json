@@ -27,7 +27,7 @@
     "@graphql-tools/merge": "8.3.3",
     "@graphql-tools/schema": "9.0.1",
     "@prisma/client": "4.2.1",
-    "altair-fastify-plugin": "4.6.2",
+    "altair-fastify-plugin": "4.6.4",
     "decimal.js": "10.4.0",
     "fastify": "4.5.2",
     "fastify-plugin": "4.2.0",
