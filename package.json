@@ -33,7 +33,7 @@
     "fastify-plugin": "4.2.1",
     "graphql": "16.6.0",
     "graphql-scalars": "1.18.0",
-    "mercurius": "10.5.0",
+    "mercurius": "10.5.1",
     "mercurius-auth": "3.0.0",
     "mercurius-codegen": "4.0.1",
     "zod": "3.18.0"
