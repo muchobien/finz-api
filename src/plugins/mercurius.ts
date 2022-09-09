@@ -17,7 +17,6 @@ import {
   JSONResolver,
 } from 'graphql-scalars';
 import fp from 'fastify-plugin';
-import { DecimalDefinition, DecimalResolver } from '@app/graphql/scalars';
 
 const buildContext = async (req: FastifyRequest, _reply: FastifyReply) => {
   return {
@@ -89,10 +88,8 @@ const plugin: FastifyPluginCallback = async app => {
       typeDefs: [
         DateTimeTypeDefinition,
         DateTypeDefinition,
-
         VoidTypeDefinition,
         JSONDefinition,
-        DecimalDefinition,
         typeDefs,
       ],
       resolvers: {
@@ -100,12 +97,12 @@ const plugin: FastifyPluginCallback = async app => {
         Date: DateResolver,
         Void: VoidResolver,
         JSON: JSONResolver,
-        Decimal: DecimalResolver,
         ...resolvers,
       },
     }),
     context: buildContext,
     loaders,
+    graphiql: 'graphiql',
   });
 
   codegenMercurius(app, {
@@ -121,7 +118,6 @@ const plugin: FastifyPluginCallback = async app => {
         Date: 'Date',
         Void: 'void',
         JSON: 'Prisma.JsonValue',
-        Decimal: 'Prisma.Decimal',
       },
       enumsAsTypes: true,
     },

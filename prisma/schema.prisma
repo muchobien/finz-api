@@ -74,7 +74,7 @@ enum TransactionKind {
 model Transaction {
   id        String          @id @default(cuid())
   name      String
-  amount    Decimal         @db.Decimal(18, 8)
+  amount    Float
   kind      TransactionKind
   date      DateTime        @db.Date
   createdAt DateTime        @default(now()) @db.Timestamptz

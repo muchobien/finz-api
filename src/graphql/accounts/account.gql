@@ -2,7 +2,7 @@ type Account {
   id: ID!
   name: String!
   color: String
-  balance: Decimal!
+  balance: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
 

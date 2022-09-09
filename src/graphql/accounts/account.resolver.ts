@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import type { IResolvers } from 'mercurius';
 
 const resolvers: IResolvers = {
@@ -42,8 +41,8 @@ const resolvers: IResolvers = {
   Account: {
     balance: async account => {
       return account.transactions.reduce((acc, transaction) => {
-        return acc.add(transaction.amount);
-      }, new Prisma.Decimal(0));
+        return acc + transaction.amount;
+      }, 0);
     },
   },
 };

@@ -30,7 +30,8 @@ app.register(autoLoad, {
 
 const start = async () => {
   try {
-    await app.listen({ port: env.PORT, host: env.HOST });
+    const address = await app.listen({ port: env.PORT, host: env.HOST });
+    app.log.info(`Graphiql listen at ${address}/graphiql`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);

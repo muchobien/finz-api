@@ -28,8 +28,6 @@ export type Scalars = {
   Void: void;
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: Prisma.JsonValue;
-  /** An arbitrary-precision Decimal type */
-  Decimal: Prisma.Decimal;
   _FieldSet: any;
 };
 
@@ -40,7 +38,7 @@ export type Account = {
   id: Scalars['ID'];
   name: Scalars['String'];
   color?: Maybe<Scalars['String']>;
-  balance: Scalars['Decimal'];
+  balance: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
   transactions: Array<Transaction>;
@@ -50,19 +48,15 @@ export type Query = {
   __typename?: 'Query';
   account: Account;
   accounts: Array<Account>;
-  category: Category;
-  categories: Array<Category>;
   transaction: Transaction;
   transactions: Array<Transaction>;
   user: User;
   users: Array<User>;
+  category: Category;
+  categories: Array<Category>;
 };
 
 export type QueryaccountArgs = {
-  id: Scalars['ID'];
-};
-
-export type QuerycategoryArgs = {
   id: Scalars['ID'];
 };
 
@@ -71,6 +65,10 @@ export type QuerytransactionArgs = {
 };
 
 export type QueryuserArgs = {
+  id: Scalars['ID'];
+};
+
+export type QuerycategoryArgs = {
   id: Scalars['ID'];
 };
 
@@ -84,9 +82,6 @@ export type Mutation = {
   createAccount: Account;
   updateAccount: Account;
   deleteAccount?: Maybe<Scalars['Void']>;
-  createCategory: Category;
-  updateCategory: Category;
-  deleteCategory?: Maybe<Scalars['Void']>;
   createTransaction: Transaction;
   updateTransaction: Transaction;
   deleteTransaction?: Maybe<Scalars['Void']>;
@@ -95,6 +90,9 @@ export type Mutation = {
   register: Authenticated;
   login: Authenticated;
   refreshToken: Credential;
+  createCategory: Category;
+  updateCategory: Category;
+  deleteCategory?: Maybe<Scalars['Void']>;
 };
 
 export type MutationcreateAccountArgs = {
@@ -107,19 +105,6 @@ export type MutationupdateAccountArgs = {
 };
 
 export type MutationdeleteAccountArgs = {
-  id: Scalars['ID'];
-};
-
-export type MutationcreateCategoryArgs = {
-  input: CategoryInput;
-};
-
-export type MutationupdateCategoryArgs = {
-  id: Scalars['ID'];
-  input: CategoryInput;
-};
-
-export type MutationdeleteCategoryArgs = {
   id: Scalars['ID'];
 };
 
@@ -153,18 +138,17 @@ export type MutationloginArgs = {
   input: AuthInput;
 };
 
-export type Category = {
-  __typename?: 'Category';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  color?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
+export type MutationcreateCategoryArgs = {
+  input: CategoryInput;
 };
 
-export type CategoryInput = {
-  name: Scalars['String'];
-  color?: InputMaybe<Scalars['String']>;
+export type MutationupdateCategoryArgs = {
+  id: Scalars['ID'];
+  input: CategoryInput;
+};
+
+export type MutationdeleteCategoryArgs = {
+  id: Scalars['ID'];
 };
 
 export type TransactionKind = 'INCOME' | 'EXPENSE' | 'TRANSFER';
@@ -173,7 +157,7 @@ export type Transaction = {
   __typename?: 'Transaction';
   id: Scalars['ID'];
   name: Scalars['String'];
-  amount: Scalars['Decimal'];
+  amount: Scalars['Float'];
   date: Scalars['Date'];
   kind: TransactionKind;
   createdAt: Scalars['DateTime'];
@@ -183,7 +167,7 @@ export type Transaction = {
 
 export type TransactionInput = {
   name: Scalars['String'];
-  amount: Scalars['Decimal'];
+  amount: Scalars['Float'];
   date: Scalars['Date'];
   kind: TransactionKind;
   categoryId: Scalars['ID'];
@@ -224,6 +208,20 @@ export type AuthInput = {
 };
 
 export type Provider = 'APPLE' | 'GOOGLE' | 'LOCAL';
+
+export type Category = {
+  __typename?: 'Category';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  color?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type CategoryInput = {
+  name: Scalars['String'];
+  color?: InputMaybe<Scalars['String']>;
+};
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -294,16 +292,14 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Void: ResolverTypeWrapper<Scalars['Void']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']>;
-  Decimal: ResolverTypeWrapper<Scalars['Decimal']>;
   Role: Role;
   Account: ResolverTypeWrapper<Account>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   Query: ResolverTypeWrapper<{}>;
   AccountInput: AccountInput;
   Mutation: ResolverTypeWrapper<{}>;
-  Category: ResolverTypeWrapper<Category>;
-  CategoryInput: CategoryInput;
   TransactionKind: TransactionKind;
   Transaction: ResolverTypeWrapper<Transaction>;
   TransactionInput: TransactionInput;
@@ -313,6 +309,8 @@ export type ResolversTypes = {
   UserInput: UserInput;
   AuthInput: AuthInput;
   Provider: Provider;
+  Category: ResolverTypeWrapper<Category>;
+  CategoryInput: CategoryInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -322,15 +320,13 @@ export type ResolversParentTypes = {
   Date: Scalars['Date'];
   Void: Scalars['Void'];
   JSON: Scalars['JSON'];
-  Decimal: Scalars['Decimal'];
   Account: Account;
   ID: Scalars['ID'];
   String: Scalars['String'];
+  Float: Scalars['Float'];
   Query: {};
   AccountInput: AccountInput;
   Mutation: {};
-  Category: Category;
-  CategoryInput: CategoryInput;
   Transaction: Transaction;
   TransactionInput: TransactionInput;
   User: User;
@@ -338,6 +334,8 @@ export type ResolversParentTypes = {
   Authenticated: Authenticated;
   UserInput: UserInput;
   AuthInput: AuthInput;
+  Category: Category;
+  CategoryInput: CategoryInput;
   Boolean: Scalars['Boolean'];
 };
 
@@ -368,10 +366,6 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export interface DecimalScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Decimal'], any> {
-  name: 'Decimal';
-}
-
 export type AccountResolvers<
   ContextType = MercuriusContext,
   ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account'],
@@ -379,7 +373,7 @@ export type AccountResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   color?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  balance?: Resolver<ResolversTypes['Decimal'], ParentType, ContextType>;
+  balance?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType>;
@@ -392,8 +386,6 @@ export type QueryResolvers<
 > = {
   account?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<QueryaccountArgs, 'id'>>;
   accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType>;
-  category?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<QuerycategoryArgs, 'id'>>;
-  categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   transaction?: Resolver<
     ResolversTypes['Transaction'],
     ParentType,
@@ -403,6 +395,8 @@ export type QueryResolvers<
   transactions?: Resolver<Array<ResolversTypes['Transaction']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryuserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  category?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<QuerycategoryArgs, 'id'>>;
+  categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
 };
 
 export type MutationResolvers<
@@ -426,24 +420,6 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationdeleteAccountArgs, 'id'>
-  >;
-  createCategory?: Resolver<
-    ResolversTypes['Category'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationcreateCategoryArgs, 'input'>
-  >;
-  updateCategory?: Resolver<
-    ResolversTypes['Category'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationupdateCategoryArgs, 'id' | 'input'>
-  >;
-  deleteCategory?: Resolver<
-    Maybe<ResolversTypes['Void']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationdeleteCategoryArgs, 'id'>
   >;
   createTransaction?: Resolver<
     ResolversTypes['Transaction'],
@@ -483,18 +459,24 @@ export type MutationResolvers<
   >;
   login?: Resolver<ResolversTypes['Authenticated'], ParentType, ContextType, RequireFields<MutationloginArgs, 'input'>>;
   refreshToken?: Resolver<ResolversTypes['Credential'], ParentType, ContextType>;
-};
-
-export type CategoryResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category'],
-> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  color?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  createCategory?: Resolver<
+    ResolversTypes['Category'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreateCategoryArgs, 'input'>
+  >;
+  updateCategory?: Resolver<
+    ResolversTypes['Category'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateCategoryArgs, 'id' | 'input'>
+  >;
+  deleteCategory?: Resolver<
+    Maybe<ResolversTypes['Void']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationdeleteCategoryArgs, 'id'>
+  >;
 };
 
 export type TransactionResolvers<
@@ -503,7 +485,7 @@ export type TransactionResolvers<
 > = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  amount?: Resolver<ResolversTypes['Decimal'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes['TransactionKind'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -544,20 +526,31 @@ export type AuthenticatedResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CategoryResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category'],
+> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  color?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = MercuriusContext> = {
   DateTime?: GraphQLScalarType;
   Date?: GraphQLScalarType;
   Void?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
-  Decimal?: GraphQLScalarType;
   Account?: AccountResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
-  Category?: CategoryResolvers<ContextType>;
   Transaction?: TransactionResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Credential?: CredentialResolvers<ContextType>;
   Authenticated?: AuthenticatedResolvers<ContextType>;
+  Category?: CategoryResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = MercuriusContext> = {
@@ -586,24 +579,16 @@ export interface Loaders<TContext = import('mercurius').MercuriusContext & { rep
     id?: LoaderResolver<Scalars['ID'], Account, {}, TContext>;
     name?: LoaderResolver<Scalars['String'], Account, {}, TContext>;
     color?: LoaderResolver<Maybe<Scalars['String']>, Account, {}, TContext>;
-    balance?: LoaderResolver<Scalars['Decimal'], Account, {}, TContext>;
+    balance?: LoaderResolver<Scalars['Float'], Account, {}, TContext>;
     createdAt?: LoaderResolver<Scalars['DateTime'], Account, {}, TContext>;
     updatedAt?: LoaderResolver<Scalars['DateTime'], Account, {}, TContext>;
     transactions?: LoaderResolver<Array<Transaction>, Account, {}, TContext>;
   };
 
-  Category?: {
-    id?: LoaderResolver<Scalars['ID'], Category, {}, TContext>;
-    name?: LoaderResolver<Scalars['String'], Category, {}, TContext>;
-    color?: LoaderResolver<Maybe<Scalars['String']>, Category, {}, TContext>;
-    createdAt?: LoaderResolver<Scalars['DateTime'], Category, {}, TContext>;
-    updatedAt?: LoaderResolver<Scalars['DateTime'], Category, {}, TContext>;
-  };
-
   Transaction?: {
     id?: LoaderResolver<Scalars['ID'], Transaction, {}, TContext>;
     name?: LoaderResolver<Scalars['String'], Transaction, {}, TContext>;
-    amount?: LoaderResolver<Scalars['Decimal'], Transaction, {}, TContext>;
+    amount?: LoaderResolver<Scalars['Float'], Transaction, {}, TContext>;
     date?: LoaderResolver<Scalars['Date'], Transaction, {}, TContext>;
     kind?: LoaderResolver<TransactionKind, Transaction, {}, TContext>;
     createdAt?: LoaderResolver<Scalars['DateTime'], Transaction, {}, TContext>;
@@ -629,6 +614,14 @@ export interface Loaders<TContext = import('mercurius').MercuriusContext & { rep
   Authenticated?: {
     user?: LoaderResolver<User, Authenticated, {}, TContext>;
     credential?: LoaderResolver<Credential, Authenticated, {}, TContext>;
+  };
+
+  Category?: {
+    id?: LoaderResolver<Scalars['ID'], Category, {}, TContext>;
+    name?: LoaderResolver<Scalars['String'], Category, {}, TContext>;
+    color?: LoaderResolver<Maybe<Scalars['String']>, Category, {}, TContext>;
+    createdAt?: LoaderResolver<Scalars['DateTime'], Category, {}, TContext>;
+    updatedAt?: LoaderResolver<Scalars['DateTime'], Category, {}, TContext>;
   };
 }
 declare module 'mercurius' {

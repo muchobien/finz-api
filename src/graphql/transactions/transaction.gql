@@ -7,7 +7,7 @@ enum TransactionKind {
 type Transaction {
   id: ID!
   name: String!
-  amount: Decimal!
+  amount: Float!
   date: Date!
   kind: TransactionKind!
   createdAt: DateTime!
@@ -22,7 +22,7 @@ type Query {
 
 input TransactionInput {
   name: String!
-  amount: Decimal!
+  amount: Float!
   date: Date!
   kind: TransactionKind!
   categoryId: ID!
