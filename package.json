@@ -24,7 +24,7 @@
     "@fastify/autoload": "5.3.1",
     "@fastify/jwt": "6.3.2",
     "@graphql-tools/load-files": "6.6.1",
-    "@graphql-tools/merge": "8.3.4",
+    "@graphql-tools/merge": "8.3.5",
     "@graphql-tools/schema": "9.0.3",
     "@prisma/client": "4.3.1",
     "fastify": "4.5.3",
