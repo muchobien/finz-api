@@ -44,12 +44,12 @@ type Account {
 type Query {
   account(id: ID!): Account! @auth(requires: USER)
   accounts: [Account!]! @auth(requires: USER)
+  category(id: ID!): Category! @auth(requires: USER)
+  categories: [Category!]! @auth(requires: USER)
   transaction(id: ID!): Transaction! @auth(requires: USER)
   transactions: [Transaction!]! @auth(requires: USER)
   user(id: ID!): User!
   users: [User!]!
-  category(id: ID!): Category! @auth(requires: USER)
-  categories: [Category!]! @auth(requires: USER)
 }
 
 input AccountInput {
@@ -61,6 +61,9 @@ type Mutation {
   createAccount(input: AccountInput!): Account! @auth(requires: USER)
   updateAccount(id: ID!, input: AccountInput!): Account! @auth(requires: USER)
   deleteAccount(id: ID!): Void @auth(requires: USER)
+  createCategory(input: CategoryInput!): Category! @auth(requires: USER)
+  updateCategory(id: ID!, input: CategoryInput!): Category! @auth
+  deleteCategory(id: ID!): Void @auth
   createTransaction(input: TransactionInput!): Transaction! @auth(requires: USER)
   updateTransaction(id: ID!, input: TransactionInput!): Transaction! @auth(requires: USER)
   deleteTransaction(id: ID!): Void @auth(requires: USER)
@@ -69,9 +72,19 @@ type Mutation {
   register(input: AuthInput!): Authenticated!
   login(input: AuthInput!): Authenticated!
   refreshToken: Credential!
-  createCategory(input: CategoryInput!): Category! @auth(requires: USER)
-  updateCategory(id: ID!, input: CategoryInput!): Category! @auth
-  deleteCategory(id: ID!): Void @auth
+}
+
+type Category {
+  id: ID!
+  name: String!
+  color: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CategoryInput {
+  name: String!
+  color: String
 }
 
 enum TransactionKind {
@@ -134,17 +147,4 @@ enum Provider {
   APPLE
   GOOGLE
   LOCAL
-}
-
-type Category {
-  id: ID!
-  name: String!
-  color: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input CategoryInput {
-  name: String!
-  color: String
 }
