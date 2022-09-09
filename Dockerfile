@@ -1,27 +1,32 @@
-FROM node:16-alpine as builder
+# syntax=docker/dockerfile:1.4
+FROM node:16.17.0-alpine3.16 as builder
 
 WORKDIR /home/node
 
 COPY package*.json ./
 COPY yarn.lock ./
 COPY prisma ./prisma/
-RUN apk update \
-    && apk add openssl \
-    && rm -rf /var/cache/apk/* \
-    && yarn install --frozen-lockfile
+
+RUN --mount=type=cache,target=/home/node/.yarn,rw --mount=type=cache,target=/var/cache/apk,rw <<EOF
+apk update
+apk add jq
+YARN_CACHE_FOLDER=/home/node/.yarn yarn install --frozen-lockfile
+EOF
 
 COPY --chown=node:node . .
-COPY --from=stedolan/jq  /usr/local/bin/jq /usr/local/bin/jq
-RUN yarn build \
-    && yarn remove $(cat package.json | jq -r '.devDependencies | keys | join(" ")')
 
-FROM node:16-alpine
+RUN <<EOF
+yarn build
+yarn remove $(cat package.json | jq -r '.devDependencies | keys | join(" ")')
+EOF
+
+FROM node:16.17.0-alpine3.16
 ENV NODE_ENV production
 WORKDIR /home/node
 
-RUN apk update \
-    && apk add openssl ca-certificates \
-    && rm -rf /var/cache/apk/* 
+RUN <<EOF
+apk add --no-cache ca-certificates
+EOF
 
 USER node
 
