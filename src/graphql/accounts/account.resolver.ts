@@ -22,18 +22,16 @@ const resolvers: IResolvers = {
     },
     updateAccount: async (_, { id, input }, { prisma, currentUser }) => {
       const user = currentUser();
-      await prisma.account.updateMany({
+      const account = await prisma.account.update({
         where: { id, userId: user.id },
         data: input,
       });
 
-      return prisma.account.findFirstOrThrow({
-        where: { id, userId: user.id },
-      });
+      return account;
     },
     deleteAccount: async (_, { id }, { prisma, currentUser }) => {
       const user = currentUser();
-      await prisma.account.deleteMany({
+      await prisma.account.delete({
         where: { id, userId: user.id },
       });
     },
