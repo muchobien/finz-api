@@ -3,7 +3,7 @@ import type { FastifyPluginCallback } from 'fastify';
 
 const plugin: FastifyPluginCallback = async app => {
   // Status/health endpoint
-  app.get('/healtz', () => {
+  app.get('/healthz', () => {
     return {
       env: env.APP_ENV,
       sha: env.GITHUB_SHA,
