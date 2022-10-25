@@ -20,8 +20,8 @@ type Authenticated {
 }
 
 type Query {
-  user(id: ID!): User!
-  users: [User!]!
+  user(id: ID!): User! @auth(requires: USER)
+  users: [User!]! @auth(requires: USER)
 }
 
 input UserInput {

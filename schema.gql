@@ -48,8 +48,8 @@ type Query {
   categories: [Category!]! @auth(requires: USER)
   transaction(id: ID!): Transaction! @auth(requires: USER)
   transactions: [Transaction!]! @auth(requires: USER)
-  user(id: ID!): User!
-  users: [User!]!
+  user(id: ID!): User! @auth(requires: USER)
+  users: [User!]! @auth(requires: USER)
 }
 
 input AccountInput {
