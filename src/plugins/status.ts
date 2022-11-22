@@ -1,15 +1,27 @@
-import { env } from '@app/config/env';
+import { db } from '@app/db.js';
 import type { FastifyPluginCallback } from 'fastify';
 
 const plugin: FastifyPluginCallback = async app => {
-  // Status/health endpoint
-  app.get('/healthz', () => {
+  app.get('/liveness', () => {
     return {
-      env: env.APP_ENV,
-      sha: env.GITHUB_SHA,
       up: true,
-      version: env.VERSION,
     };
+  });
+
+  app.get('/readiness', async (_, res) => {
+    try {
+      await db.$queryRaw`SELECT 1`;
+      return {
+        up: true,
+        db: true,
+      };
+    } catch (error) {
+      res.status(503);
+      return {
+        up: true,
+        db: false,
+      };
+    }
   });
 };
 

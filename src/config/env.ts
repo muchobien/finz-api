@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   APP_ENV: z.enum(['development', 'production', 'test', 'gh-actions']),
+  APP_NAME: z.string().default('finz'),
   HOST: z.string().default('0.0.0.0'),
   NODE_ENV: z.enum(['production', 'development']),
   PORT: z.number().int().nonnegative().lte(65535).default(2202),

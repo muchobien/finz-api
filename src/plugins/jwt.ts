@@ -7,8 +7,8 @@ import FastifyJWT, {
   type SignPayloadType,
   type VerifyOptions,
 } from '@fastify/jwt';
-import { env } from '@app/config/env';
-import type { Role } from '@app/generated/graphql';
+import type { Role } from '@prisma/client';
+import { env } from '@app/config/env.js';
 
 type Payload = {
   id: string;

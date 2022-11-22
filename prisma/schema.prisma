@@ -3,7 +3,11 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["extendedWhereUnique"]
+  previewFeatures = ["extendedWhereUnique", "tracing"]
+}
+
+generator pothos {
+  provider = "prisma-pothos-types"
 }
 
 datasource db {
@@ -44,25 +48,22 @@ model User {
 }
 
 model Account {
-  id        String   @id @default(cuid())
-  name      String
-  color     String?
-  createdAt DateTime @default(now()) @db.Timestamptz
-  updatedAt DateTime @updatedAt @db.Timestamptz
-
-  userId String
-  owner  User   @relation(fields: [userId], references: [id])
-
+  id           String        @id @default(cuid())
+  name         String
+  color        String?
+  createdAt    DateTime      @default(now()) @db.Timestamptz
+  updatedAt    DateTime      @updatedAt @db.Timestamptz
+  userId       String
+  owner        User          @relation(fields: [userId], references: [id])
   transactions Transaction[]
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  color     String?
-  createdAt DateTime @default(now()) @db.Timestamptz
-  updatedAt DateTime @updatedAt @db.Timestamptz
-
+  id           String        @id @default(cuid())
+  name         String        @unique
+  color        String?
+  createdAt    DateTime      @default(now()) @db.Timestamptz
+  updatedAt    DateTime      @updatedAt @db.Timestamptz
   transactions Transaction[]
 }
 
@@ -73,19 +74,17 @@ enum TransactionKind {
 }
 
 model Transaction {
-  id        String          @id @default(cuid())
-  name      String
-  amount    Float
-  kind      TransactionKind
-  date      DateTime        @db.Date
-  createdAt DateTime        @default(now()) @db.Timestamptz
-  updatedAt DateTime        @updatedAt @db.Timestamptz
-
+  id         String          @id @default(cuid())
+  name       String
+  amount     Float
+  kind       TransactionKind
+  date       DateTime        @db.Date
+  createdAt  DateTime        @default(now()) @db.Timestamptz
+  updatedAt  DateTime        @updatedAt @db.Timestamptz
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  accountId String
-  account   Account @relation(fields: [accountId], references: [id])
+  category   Category        @relation(fields: [categoryId], references: [id])
+  accountId  String
+  account    Account         @relation(fields: [accountId], references: [id])
 }
 
 model RemoteConfig {
