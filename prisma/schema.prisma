@@ -26,7 +26,7 @@ model Identity {
   token     String
   provider  Provider
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 }
@@ -62,9 +62,12 @@ model Category {
   id           String        @id @default(cuid())
   name         String        @unique
   color        String?
+  parent       Category?     @relation("parent", fields: [parentId], references: [id])
+  parentId     String?
   createdAt    DateTime      @default(now()) @db.Timestamptz
   updatedAt    DateTime      @updatedAt @db.Timestamptz
   transactions Transaction[]
+  categories   Category[]    @relation("parent")
 }
 
 enum TransactionKind {
@@ -73,18 +76,31 @@ enum TransactionKind {
   TRANSFER
 }
 
+enum TransactionInterval {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
 model Transaction {
-  id         String          @id @default(cuid())
+  id         String               @id @default(cuid())
   name       String
   amount     Float
   kind       TransactionKind
-  date       DateTime        @db.Date
-  createdAt  DateTime        @default(now()) @db.Timestamptz
-  updatedAt  DateTime        @updatedAt @db.Timestamptz
+  date       DateTime             @db.Date
+  scheduled  Boolean              @default(false)
+  interval   TransactionInterval?
+  startDate  DateTime?
+  endDate    DateTime?
+  createdAt  DateTime             @default(now()) @db.Timestamptz
+  updatedAt  DateTime             @updatedAt @db.Timestamptz
   categoryId String
-  category   Category        @relation(fields: [categoryId], references: [id])
+  category   Category             @relation(fields: [categoryId], references: [id])
   accountId  String
-  account    Account         @relation(fields: [accountId], references: [id])
+  account    Account              @relation(fields: [accountId], references: [id])
+
+  @@index([accountId, date, kind])
 }
 
 model RemoteConfig {
